@@ -1,1 +1,377 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VIAN’S STORE | Vivre, c'est être frais !</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+</head>
+<body class="min-h-screen flex flex-col justify-between selection:bg-brandOrange selection:text-white">
 
+    <!-- Top Banner -->
+    <div class="top-banner bg-brandOrange text-white text-xs py-1.5 px-4 text-center font-bold tracking-widest uppercase">
+        🚀 LIVRAISON EXPRESS SUR TOUT ABIDJAN & EN CÔTE D'IVOIRE | VIVRE, C'EST ÊTRE FRAIS !
+    </div>
+
+    <!-- Navigation Header -->
+    <header class="sticky top-0 z-40 bg-brandDark/95 backdrop-blur-md border-b border-brandAnthracite">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <!-- Mobile Menu Button -->
+                <button onclick="toggleMobileMenu()" class="md:hidden text-white hover:text-brandOrange focus:outline-none">
+                    <i data-lucide="menu" class="w-7 h-7"></i>
+                </button>
+
+                <!-- Brand Logo -->
+                <div class="flex-shrink-0 cursor-pointer flex items-center gap-2" onclick="showSection('home')">
+                    <div class="bg-brandOrange text-black font-black text-xl px-2.5 py-1 rounded tracking-tighter">VS</div>
+                    <span class="text-2xl font-black tracking-widest text-white">VIAN’S <span class="text-brandOrange">STORE</span></span>
+                </div>
+
+                <!-- Desktop Nav -->
+                <nav class="hidden md:flex space-x-8 text-sm font-bold tracking-wider">
+                    <button onclick="filterCatalog('all')" class="hover:text-brandOrange transition">TOUS LES PRODUITS</button>
+                    <button onclick="filterCatalog('HOMME')" class="hover:text-brandOrange transition">HOMME</button>
+                    <button onclick="filterCatalog('FEMME')" class="hover:text-brandOrange transition">FEMME</button>
+                    <button onclick="showSection('trends')" class="hover:text-brandOrange transition flex items-center gap-1">
+                        <i data-lucide="flame" class="w-4 h-4 text-brandOrange"></i> VIDÉOS & TENDANCES
+                    </button>
+                    <button onclick="showSection('about')" class="hover:text-brandOrange transition">À PROPOS</button>
+                </nav>
+
+                <!-- Action Icons -->
+                <div class="flex items-center space-x-5">
+                    <button onclick="toggleSearchModal()" class="text-white hover:text-brandOrange transition">
+                        <i data-lucide="search" class="w-6 h-6"></i>
+                    </button>
+                    <button onclick="toggleCartModal()" class="relative text-white hover:text-brandOrange transition">
+                        <i data-lucide="shopping-bag" class="w-6 h-6"></i>
+                        <span id="cart-badge" class="absolute -top-2 -right-2 bg-brandOrange text-white text-[10px] font-extrabold w-5 h-5 rounded-full flex items-center justify-center">0</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile Drawer Navigation -->
+    <div id="mobile-menu" class="fixed inset-0 bg-black/80 z-50 hidden backdrop-blur-sm">
+        <div class="w-4/5 max-w-sm bg-brandGray h-full p-6 flex flex-col justify-between">
+            <div>
+                <div class="flex justify-between items-center mb-8 border-b border-brandAnthracite pb-4">
+                    <span class="text-xl font-black text-white">VIAN’S <span class="text-brandOrange">STORE</span></span>
+                    <button onclick="toggleMobileMenu()" class="text-gray-400 hover:text-white"><i data-lucide="x" class="w-6 h-6"></i></button>
+                </div>
+                <div class="flex flex-col space-y-4 text-lg font-bold">
+                    <button onclick="filterCatalog('all'); toggleMobileMenu()" class="text-left hover:text-brandOrange py-2">TOUS LES PRODUITS</button>
+                    <button onclick="filterCatalog('HOMME'); toggleMobileMenu()" class="text-left hover:text-brandOrange py-2">HOMME</button>
+                    <button onclick="filterCatalog('FEMME'); toggleMobileMenu()" class="text-left hover:text-brandOrange py-2">FEMME</button>
+                    <button onclick="showSection('trends'); toggleMobileMenu()" class="text-left text-brandOrange py-2 flex items-center gap-2"><i data-lucide="flame" class="w-5 h-5"></i> VIDÉOS & TENDANCES</button>
+                    <button onclick="showSection('about'); toggleMobileMenu()" class="text-left hover:text-brandOrange py-2">À PROPOS</button>
+                </div>
+            </div>
+            <div class="border-t border-brandAnthracite pt-4">
+                <a id="nav-whatsapp-link" href="#" target="_blank" class="flex items-center gap-2 text-emerald-400 font-bold py-2"><i data-lucide="phone-call" class="w-5 h-5"></i> Contact WhatsApp</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN CONTENT CONTAINER -->
+    <main id="main-content" class="flex-grow">
+        <!-- Home / Catalog View -->
+        <section id="view-home">
+            <!-- Hero Banner -->
+            <div class="relative bg-brandGray border-b border-brandAnthracite overflow-hidden">
+                <div class="max-w-7xl mx-auto px-4 py-16 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-8">
+                    <div class="space-y-6 max-w-xl text-center md:text-left">
+                        <span class="inline-block bg-brandOrange/20 text-brandOrange px-3 py-1 rounded-full text-xs font-black uppercase tracking-widest">Collection Urban 2026</span>
+                        <h1 class="text-4xl sm:text-6xl font-black tracking-tight leading-none">STREETWEAR <br><span class="text-brandOrange">ABIDJAN</span> VIBES</h1>
+                        <p class="text-gray-400 text-lg font-medium">« VIVRE, C'EST ÊTRE FRAIS ! » – Découvrez la nouvelle gamme exclusive de T-shirts, Hoodies, Ensembles et Accessoires.</p>
+                        <div class="flex flex-wrap gap-4 justify-center md:justify-start">
+                            <button onclick="scrollToCatalog()" class="bg-brandOrange hover:bg-brandOrangeHover text-white font-extrabold px-8 py-4 rounded-lg uppercase text-sm tracking-wider shadow-lg transition">DÉCOUVRIR LES TENDANCES</button>
+                            <button onclick="filterCatalog('HOMME')" class="border border-white/20 hover:border-brandOrange text-white font-bold px-6 py-4 rounded-lg uppercase text-sm tracking-wider transition">HOMME</button>
+                            <button onclick="filterCatalog('FEMME')" class="border border-white/20 hover:border-brandOrange text-white font-bold px-6 py-4 rounded-lg uppercase text-sm tracking-wider transition">FEMME</button>
+                        </div>
+                    </div>
+                    <div class="w-full md:w-1/2 flex justify-center">
+                        <img src="https://images.unsplash.com/photo-1523381210434-271e8be1f52b?auto=format&fit=crop&w=800&q=80" alt="Streetwear Collection" class="rounded-2xl border-2 border-brandAnthracite shadow-2xl object-cover max-h-[450px] w-full">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Features Bar -->
+            <div class="bg-brandDark border-b border-brandAnthracite py-6">
+                <div class="max-w-7xl mx-auto px-4 grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+                    <div class="p-3 border border-brandAnthracite/50 rounded-lg">
+                        <i data-lucide="truck" class="w-6 h-6 text-brandOrange mx-auto mb-2"></i>
+                        <h4 class="font-bold text-sm">Livraison Rapide</h4>
+                        <p class="text-xs text-gray-400">Abidjan & Intérieur</p>
+                    </div>
+                    <div class="p-3 border border-brandAnthracite/50 rounded-lg">
+                        <i data-lucide="message-square" class="w-6 h-6 text-brandOrange mx-auto mb-2"></i>
+                        <h4 class="font-bold text-sm">Commande WhatsApp</h4>
+                        <p class="text-xs text-gray-400">Simple & Instantanée</p>
+                    </div>
+                    <div class="p-3 border border-brandAnthracite/50 rounded-lg">
+                        <i data-lucide="shield-check" class="w-6 h-6 text-brandOrange mx-auto mb-2"></i>
+                        <h4 class="font-bold text-sm">Qualité Premium</h4>
+                        <p class="text-xs text-gray-400">Streetwear Authentique</p>
+                    </div>
+                    <div class="p-3 border border-brandAnthracite/50 rounded-lg">
+                        <i data-lucide="refresh-cw" class="w-6 h-6 text-brandOrange mx-auto mb-2"></i>
+                        <h4 class="font-bold text-sm">Paiement à la Livraison</h4>
+                        <p class="text-xs text-gray-400">Cash / Wave / OM</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Catalog Section -->
+            <div id="catalog-section" class="max-w-7xl mx-auto px-4 py-12 sm:px-6 lg:px-8">
+                <!-- Section Header -->
+                <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
+                    <div>
+                        <h2 class="text-3xl font-black uppercase tracking-wider text-white">NOTRE <span class="text-brandOrange">CATALOGUE</span></h2>
+                        <p class="text-gray-400 text-sm">Filtrez et sélectionnez vos pièces streetwear préférées.</p>
+                    </div>
+                    <!-- Category Filter Buttons -->
+                    <div class="flex flex-wrap gap-2">
+                        <button onclick="filterCatalog('all')" id="btn-cat-all" class="cat-btn bg-brandOrange text-white font-bold px-4 py-2 rounded-md text-xs uppercase">Tous</button>
+                        <button onclick="filterCatalog('HOMME')" id="btn-cat-HOMME" class="cat-btn bg-brandAnthracite hover:bg-brandOrange text-white font-bold px-4 py-2 rounded-md text-xs uppercase">Homme</button>
+                        <button onclick="filterCatalog('FEMME')" id="btn-cat-FEMME" class="cat-btn bg-brandAnthracite hover:bg-brandOrange text-white font-bold px-4 py-2 rounded-md text-xs uppercase">Femme</button>
+                        <button onclick="filterCatalog('promo')" id="btn-cat-promo" class="cat-btn bg-brandAnthracite hover:bg-brandOrange text-white font-bold px-4 py-2 rounded-md text-xs uppercase text-red-400">Promotions 🔥</button>
+                    </div>
+                </div>
+
+                <!-- Products Grid -->
+                <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <!-- Dynamic Products -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Product Details View -->
+        <section id="view-product-detail" class="hidden max-w-7xl mx-auto px-4 py-12 sm:px-6 lg:px-8">
+            <button onclick="showSection('home')" class="flex items-center gap-2 text-gray-400 hover:text-white mb-6 font-bold text-sm">
+                <i data-lucide="arrow-left" class="w-5 h-5"></i> Retour au catalogue
+            </button>
+            <div id="product-detail-container" class="grid grid-cols-1 md:grid-cols-2 gap-10 bg-brandGray p-6 md:p-10 rounded-2xl border border-brandAnthracite">
+                <!-- Product Detail -->
+            </div>
+        </section>
+
+        <!-- Videos & Trends View -->
+        <section id="view-trends" class="hidden max-w-7xl mx-auto px-4 py-12 sm:px-6 lg:px-8">
+            <div class="text-center max-w-2xl mx-auto mb-10">
+                <span class="inline-block bg-brandOrange/20 text-brandOrange px-3 py-1 rounded-full text-xs font-black uppercase tracking-widest mb-2">VIAN'S TV</span>
+                <h2 class="text-3xl font-black uppercase tracking-wider text-white">VIDÉOS & <span class="text-brandOrange">TENDANCES</span></h2>
+                <p class="text-gray-400 text-sm">Découvrez nos tenues en action, essayages et conseils de style streetwear.</p>
+            </div>
+            <div id="videos-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Dynamic Videos -->
+            </div>
+        </section>
+
+        <!-- About & Info View -->
+        <section id="view-about" class="hidden max-w-4xl mx-auto px-4 py-12">
+            <div class="bg-brandGray p-8 rounded-2xl border border-brandAnthracite space-y-6">
+                <h2 class="text-3xl font-black text-white uppercase">À propos de <span class="text-brandOrange">VIAN’S STORE</span></h2>
+                <p class="text-gray-300 leading-relaxed">
+                    VIAN’S STORE est une marque de mode urbaine (Streetwear) basée à Abidjan, Côte d’Ivoire. Notre mission est de vous proposer des vêtements et accessoires modernes, tendance et d’une qualité irréprochable.
+                </p>
+                <div class="border-l-4 border-brandOrange pl-4 py-2 italic text-gray-400">
+                    « VIVRE, C'EST ÊTRE FRAIS ! » - Notre devise au quotidien.
+                </div>
+                <h3 class="text-xl font-bold text-white pt-4">Livraison & Commandes</h3>
+                <p class="text-gray-300">
+                    Nous livrons dans toutes les communes d'Abidjan (Cocody, Yopougon, Marcory, Plateau, Riviera, etc.) ainsi que dans l'intérieur du pays. Toutes les commandes s'effectuent de façon fluide via WhatsApp avec confirmation immédiate.
+                </p>
+                <h3 class="text-xl font-bold text-white pt-4">Moyens de Paiement</h3>
+                <p class="text-gray-300">
+                    Le paiement s'effectue à la livraison (Espèces, Wave, Orange Money, MTN Money) après vérification de votre colis.
+                </p>
+            </div>
+        </section>
+
+        <!-- Admin View -->
+        <section id="view-admin" class="hidden max-w-7xl mx-auto px-4 py-12">
+            <div class="bg-brandGray p-6 md:p-8 rounded-2xl border border-brandAnthracite space-y-8">
+                <div class="flex justify-between items-center border-b border-brandAnthracite pb-4">
+                    <h2 class="text-2xl font-black text-white uppercase flex items-center gap-2">
+                        <i data-lucide="sliders" class="text-brandOrange"></i> Administration VIAN’S STORE
+                    </h2>
+                    <button onclick="showSection('home')" class="bg-brandAnthracite px-4 py-2 rounded text-xs font-bold hover:bg-white hover:text-black transition">Quitter Admin</button>
+                </div>
+
+                <!-- Admin Settings -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 bg-brandDark p-4 rounded-xl border border-brandAnthracite">
+                    <div>
+                        <label class="block text-xs font-bold uppercase text-gray-400 mb-2">Numéro WhatsApp de la boutique (ex: 2250700000000)</label>
+                        <div class="flex gap-2">
+                            <input type="text" id="admin-wa-num" class="bg-brandAnthracite px-3 py-2 rounded text-sm w-full text-white" value="2250700000000">
+                            <button onclick="saveAdminSettings()" class="bg-brandOrange px-4 py-2 rounded text-xs font-bold uppercase hover:bg-brandOrangeHover">Enregistrer</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Add New Product Form -->
+                <div class="space-y-4">
+                    <h3 class="text-lg font-bold text-white">Ajouter un nouveau produit</h3>
+                    <form id="add-product-form" onsubmit="handleAddProduct(event)" class="grid grid-cols-1 md:grid-cols-2 gap-4 bg-brandDark p-4 rounded-xl border border-brandAnthracite text-sm">
+                        <input type="text" id="p-name" placeholder="Nom du produit" required class="bg-brandAnthracite p-3 rounded text-white border border-brandAnthracite">
+                        <input type="text" id="p-ref" placeholder="Référence (ex: VS-TS-01)" required class="bg-brandAnthracite p-3 rounded text-white border border-brandAnthracite">
+                        <select id="p-gender" class="bg-brandAnthracite p-3 rounded text-white border border-brandAnthracite">
+                            <option value="HOMME">HOMME</option>
+                            <option value="FEMME">FEMME</option>
+                        </select>
+                        <select id="p-category" class="bg-brandAnthracite p-3 rounded text-white border border-brandAnthracite">
+                            <option value="T-shirts">T-shirts</option>
+                            <option value="Hoodies">Hoodies / Sweats</option>
+                            <option value="Jeans">Jeans / Pantalons</option>
+                            <option value="Ensembles">Ensembles</option>
+                            <option value="Accessoires">Accessoires</option>
+                            <option value="Chaussures">Chaussures</option>
+                        </select>
+                        <input type="number" id="p-price" placeholder="Prix (FCFA)" required class="bg-brandAnthracite p-3 rounded text-white border border-brandAnthracite">
+                        <input type="number" id="p-promo" placeholder="Prix Promo (Optionnel FCFA)" class="bg-brandAnthracite p-3 rounded text-white border border-brandAnthracite">
+                        <input type="text" id="p-image" placeholder="URL Image Principale" required class="bg-brandAnthracite p-3 rounded text-white border border-brandAnthracite">
+                        <input type="text" id="p-sizes" placeholder="Tailles séparées par virgule (ex: M, L, XL)" class="bg-brandAnthracite p-3 rounded text-white border border-brandAnthracite">
+                        <input type="text" id="p-colors" placeholder="Couleurs séparées par virgule (ex: Noir, Blanc)" class="bg-brandAnthracite p-3 rounded text-white border border-brandAnthracite">
+                        <textarea id="p-desc" placeholder="Description du produit" class="bg-brandAnthracite p-3 rounded text-white border border-brandAnthracite md:col-span-2"></textarea>
+                        <button type="submit" class="md:col-span-2 bg-brandOrange hover:bg-brandOrangeHover text-white py-3 rounded font-extrabold uppercase">Ajouter au Catalogue</button>
+                    </form>
+                </div>
+
+                <!-- Product List Admin Management -->
+                <div>
+                    <h3 class="text-lg font-bold text-white mb-4">Gestion des Produits Existants</h3>
+                    <div id="admin-products-list" class="space-y-3">
+                        <!-- Admin products list -->
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- SEARCH MODAL -->
+    <div id="search-modal" class="fixed inset-0 bg-black/80 z-50 hidden backdrop-blur-sm p-4 flex justify-center items-start pt-20">
+        <div class="bg-brandGray w-full max-w-xl p-6 rounded-2xl border border-brandAnthracite shadow-2xl space-y-4">
+            <div class="flex justify-between items-center">
+                <h3 class="text-lg font-black uppercase text-white">Rechercher un produit</h3>
+                <button onclick="toggleSearchModal()" class="text-gray-400 hover:text-white"><i data-lucide="x" class="w-6 h-6"></i></button>
+            </div>
+            <input type="text" id="search-input" onkeyup="handleSearch()" placeholder="T-shirt, Jeans, Hoodie..." class="w-full bg-brandDark border border-brandAnthracite p-3 rounded-xl text-white outline-none focus:border-brandOrange">
+            <div id="search-results" class="max-h-80 overflow-y-auto space-y-2">
+                <!-- Live search results -->
+            </div>
+        </div>
+    </div>
+
+    <!-- SHOPPING CART MODAL / DRAWER -->
+    <div id="cart-modal" class="fixed inset-0 bg-black/80 z-50 hidden backdrop-blur-sm flex justify-end">
+        <div class="bg-brandGray w-full max-w-md h-full p-6 flex flex-col justify-between overflow-y-auto">
+            <div>
+                <div class="flex justify-between items-center pb-4 border-b border-brandAnthracite">
+                    <h3 class="text-xl font-black uppercase text-white flex items-center gap-2">
+                        <i data-lucide="shopping-bag" class="text-brandOrange"></i> Mon Panier
+                    </h3>
+                    <button onclick="toggleCartModal()" class="text-gray-400 hover:text-white"><i data-lucide="x" class="w-6 h-6"></i></button>
+                </div>
+
+                <!-- Cart Items List -->
+                <div id="cart-items" class="py-4 space-y-4 max-h-[40vh] overflow-y-auto">
+                    <!-- Items -->
+                </div>
+
+                <!-- Order Checkout Form -->
+                <div id="checkout-form-container" class="border-t border-brandAnthracite pt-4 space-y-3">
+                    <h4 class="font-bold text-sm text-white uppercase">Informations de livraison</h4>
+                    <input type="text" id="client-name" placeholder="Nom & Prénom *" required class="w-full bg-brandDark border border-brandAnthracite p-2.5 rounded text-xs text-white">
+                    <input type="tel" id="client-phone" placeholder="Numéro de téléphone *" required class="w-full bg-brandDark border border-brandAnthracite p-2.5 rounded text-xs text-white">
+                    <select id="client-commune" onchange="updateDeliveryFee()" class="w-full bg-brandDark border border-brandAnthracite p-2.5 rounded text-xs text-white">
+                        <option value="Cocody">Abidjan - Cocody (1500 FCFA)</option>
+                        <option value="Yopougon">Abidjan - Yopougon (1500 FCFA)</option>
+                        <option value="Marcory">Abidjan - Marcory (1500 FCFA)</option>
+                        <option value="Plateau">Abidjan - Plateau (1500 FCFA)</option>
+                        <option value="Abobo">Abidjan - Abobo (2000 FCFA)</option>
+                        <option value="Koumassi">Abidjan - Koumassi (1500 FCFA)</option>
+                        <option value="Treichville">Abidjan - Treichville (1500 FCFA)</option>
+                        <option value="Interieur">Intérieur de la Côte d'Ivoire (3000 FCFA)</option>
+                    </select>
+                    <input type="text" id="client-address" placeholder="Quartier / Repère de livraison *" required class="w-full bg-brandDark border border-brandAnthracite p-2.5 rounded text-xs text-white">
+                </div>
+            </div>
+
+            <!-- Cart Summary & WhatsApp Action -->
+            <div class="border-t border-brandAnthracite pt-4 space-y-3">
+                <div class="flex justify-between text-sm text-gray-400">
+                    <span>Sous-total</span>
+                    <span id="cart-subtotal" class="font-bold text-white">0 FCFA</span>
+                </div>
+                <div class="flex justify-between text-sm text-gray-400">
+                    <span>Livraison (Abidjan)</span>
+                    <span id="cart-delivery" class="font-bold text-white">1500 FCFA</span>
+                </div>
+                <div class="flex justify-between text-lg font-black text-white border-t border-brandAnthracite pt-2">
+                    <span>TOTAL</span>
+                    <span id="cart-total" class="text-brandOrange">1500 FCFA</span>
+                </div>
+                <button onclick="sendOrderToWhatsApp()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold py-3.5 rounded-xl uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg transition">
+                    <i data-lucide="message-circle" class="w-5 h-5"></i> FINALISER SUR WHATSAPP
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="bg-brandGray border-t border-brandAnthracite text-gray-400 text-sm py-12">
+        <div class="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div class="space-y-4">
+                <div class="flex items-center gap-2">
+                    <div class="bg-brandOrange text-black font-black text-lg px-2 py-0.5 rounded tracking-tighter">VS</div>
+                    <span class="text-xl font-black text-white tracking-widest">VIAN’S STORE</span>
+                </div>
+                <p class="text-xs text-gray-400">La référence du Streetwear urbain à Abidjan. Sape, fraîcheur et qualité au meilleur prix.</p>
+                <div class="flex space-x-4 text-white">
+                    <a href="#" class="hover:text-brandOrange"><i data-lucide="instagram" class="w-5 h-5"></i></a>
+                    <a href="#" class="hover:text-brandOrange"><i data-lucide="facebook" class="w-5 h-5"></i></a>
+                    <a href="#" class="hover:text-brandOrange"><i data-lucide="video" class="w-5 h-5"></i></a>
+                </div>
+            </div>
+            <div>
+                <h4 class="font-bold text-white uppercase mb-4 text-xs tracking-wider">Catégories</h4>
+                <ul class="space-y-2 text-xs">
+                    <li><a href="#" onclick="filterCatalog('HOMME')" class="hover:text-white">Homme Streetwear</a></li>
+                    <li><a href="#" onclick="filterCatalog('FEMME')" class="hover:text-white">Femme Collection</a></li>
+                    <li><a href="#" onclick="filterCatalog('promo')" class="hover:text-white text-red-400">Promotions & Ventes Flash</a></li>
+                    <li><a href="#" onclick="showSection('trends')" class="hover:text-white">Vidéos & Tendances</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-bold text-white uppercase mb-4 text-xs tracking-wider">Informations</h4>
+                <ul class="space-y-2 text-xs">
+                    <li><a href="#" onclick="showSection('about')" class="hover:text-white">À propos & Delivery</a></li>
+                    <li><a href="#" onclick="showSection('about')" class="hover:text-white">Guide des Tailles</a></li>
+                    <li><a href="#" onclick="showSection('about')" class="hover:text-white">Politique de retour</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-bold text-white uppercase mb-4 text-xs tracking-wider">Contact Abidjan</h4>
+                <p class="text-xs mb-2">📍 Abidjan, Côte d'Ivoire</p>
+                <p class="text-xs mb-4">💬 WhatsApp direct pour commande</p>
+                <button onclick="showSection('admin')" class="text-[10px] text-gray-500 underline hover:text-white">Accès Espace Admin</button>
+            </div>
+        </div>
+        <div class="text-center text-xs text-gray-600 border-t border-brandAnthracite mt-8 pt-6">
+            © 2026 VIAN’S STORE. Tous droits réservés. VIVRE, C'EST ÊTRE FRAIS !
+        </div>
+    </footer>
+
+    <!-- App JavaScript Logic -->
+    <script src="script.js"></script>
+</body>
+</html>
