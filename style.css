@@ -1,1 +1,61 @@
+/* ==========================================================================
+   VIAN’S STORE - Custom Stylesheet
+   Identity: Streetwear Modern, Urban, Premium Abidjan
+   ========================================================================== */
 
+/* Color Palette Definition */
+:root {
+    --brand-dark: #0D0D0D;
+    --brand-gray: #1A1A1A;
+    --brand-anthracite: #2B2B2B;
+    --brand-light: #F8F9FA;
+    --brand-orange: #FF5500;
+    --brand-orange-hover: #D94800;
+}
+
+/* Global Reset & Font Settings */
+body {
+    font-family: 'Montserrat', sans-serif;
+    background-color: var(--brand-dark);
+    color: var(--brand-light);
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* Custom Scrollbar Utilities */
+.hide-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+
+.hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+/* Video 9:16 Aspect Ratio */
+.aspect-ratio-9-16 {
+    aspect-ratio: 9 / 16;
+}
+
+/* Custom Transitions & Hover Effects */
+button, a {
+    transition: all 0.2s ease-in-out;
+}
+
+/* Custom Selection Highlight */
+::selection {
+    background-color: var(--brand-orange);
+    color: #ffffff;
+}
+
+/* Dynamic Tailwind Colors Extension Helpers */
+.bg-brandDark { background-color: var(--brand-dark); }
+.bg-brandGray { background-color: var(--brand-gray); }
+.bg-brandAnthracite { background-color: var(--brand-anthracite); }
+.bg-brandOrange { background-color: var(--brand-orange); }
+.hover\:bg-brandOrangeHover:hover { background-color: var(--brand-orange-hover); }
+.text-brandOrange { color: var(--brand-orange); }
+.border-brandAnthracite { border-color: var(--brand-anthracite); }
+.border-brandOrange { border-color: var(--brand-orange); }
