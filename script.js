@@ -1,501 +1,87 @@
-// Store Configuration & Initial Data
-let storeConfig = {
-    whatsappNumber: '2250700000000'
-};
-
-const initialProducts = [
-    {
-        id: 'VS-01',
-        name: 'Oversized Hoodie Streetwear Black',
-        gender: 'HOMME',
-        category: 'Hoodies',
-        price: 18000,
-        promoPrice: 15000,
-        image: 'https://images.unsplash.com/photo-1556905055-8f358a7a47b2?auto=format&fit=crop&w=600&q=80',
-        sizes: ['M', 'L', 'XL', 'XXL'],
-        colors: ['Noir', 'Gris'],
-        stock: 12,
-        desc: 'Hoodie ultra confortable en coton lourd 400 GSM. Coupe oversized moderne typique du streetwear abidjanais.'
-    },
-    {
-        id: 'VS-02',
-        name: 'T-Shirt Graphic "VIVRE FRAIS"',
-        gender: 'HOMME',
-        category: 'T-shirts',
-        price: 10000,
-        promoPrice: 8500,
-        image: 'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=600&q=80',
-        sizes: ['S', 'M', 'L', 'XL'],
-        colors: ['Blanc', 'Noir', 'Orange'],
-        stock: 20,
-        desc: 'T-shirt graphique premium floqué du slogan officiel de la marque VIAN’S STORE.'
-    },
-    {
-        id: 'VS-03',
-        name: 'Ensemble Cargo Urban Fit Female',
-        gender: 'FEMME',
-        category: 'Ensembles',
-        price: 25000,
-        promoPrice: null,
-        image: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=600&q=80',
-        sizes: ['S', 'M', 'L'],
-        colors: ['Beige', 'Noir'],
-        stock: 8,
-        desc: 'Top court et pantalon cargo assorti. Style urbain affirmé et respirant.'
-    },
-    {
-        id: 'VS-04',
-        name: 'Jean Wide Leg Brut Street',
-        gender: 'HOMME',
-        category: 'Jeans',
-        price: 20000,
-        promoPrice: 18000,
-        image: 'https://images.unsplash.com/photo-1541099649105-f69ad21f3246?auto=format&fit=crop&w=600&q=80',
-        sizes: ['30', '32', '34', '36'],
-        colors: ['Bleu Brut', 'Noir Delavé'],
-        stock: 15,
-        desc: 'Jean coupe large en denim haute qualité. Finitions soignées et look décontracté.'
-    },
-    {
-        id: 'VS-05',
-        name: 'Crop Top & Veste Oversized',
-        gender: 'FEMME',
-        category: 'Tops et crop tops',
-        price: 22000,
-        promoPrice: null,
-        image: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&w=600&q=80',
-        sizes: ['S', 'M', 'L'],
-        colors: ['Blanc/Orange', 'Noir'],
-        stock: 10,
-        desc: 'Ensemble féminin streetwear léger et tendance pour les sorties d’Abidjan.'
-    }
-];
-
-const initialVideos = [
-    {
-        title: 'Drop Collection Urban 2026',
-        productId: 'VS-01',
-        videoUrl: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&w=500&q=80'
-    },
-    {
-        title: 'Focus T-Shirt "VIVRE FRAIS"',
-        productId: 'VS-02',
-        videoUrl: 'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=500&q=80'
-    }
-];
-
-let products = [...initialProducts];
-let videos = [...initialVideos];
-let cart = [];
-let currentDeliveryFee = 1500;
-let selectedSize = '';
-let selectedColor = '';
-
-document.addEventListener('DOMContentLoaded', () => {
-    lucide.createIcons();
-    renderCatalog(products);
-    renderVideos();
-    renderAdminProducts();
-    updateNavWhatsApp();
-});
-
-function showSection(sectionId) {
-    ['home', 'product-detail', 'trends', 'about', 'admin'].forEach(id => {
-        document.getElementById(`view-${id}`).classList.add('hidden');
-    });
-    document.getElementById(`view-${sectionId}`).classList.remove('hidden');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-
-function scrollToCatalog() {
-    showSection('home');
-    document.getElementById('catalog-section').scrollIntoView({ behavior: 'smooth' });
-}
-
-function toggleMobileMenu() {
-    document.getElementById('mobile-menu').classList.toggle('hidden');
-}
-
-function toggleSearchModal() {
-    document.getElementById('search-modal').classList.toggle('hidden');
-}
-
-function toggleCartModal() {
-    document.getElementById('cart-modal').classList.toggle('hidden');
-}
-
-function renderCatalog(items) {
-    const grid = document.getElementById('products-grid');
-    grid.innerHTML = items.map(p => {
-        const finalPrice = p.promoPrice || p.price;
-        const hasPromo = p.promoPrice !== null;
-        return `
-            <div class="bg-brandGray rounded-2xl overflow-hidden border border-brandAnthracite hover:border-brandOrange transition flex flex-col justify-between">
-                <div class="relative cursor-pointer" onclick="viewProductDetail('${p.id}')">
-                    <img src="${p.image}" alt="${p.name}" class="w-full h-72 object-cover">
-                    ${hasPromo ? `<span class="absolute top-3 left-3 bg-red-600 text-white text-[10px] font-black px-2 py-1 rounded uppercase">PROMO</span>` : ''}
-                    <span class="absolute top-3 right-3 bg-brandDark/80 text-white text-[10px] font-bold px-2 py-1 rounded">${p.gender}</span>
-                </div>
-                <div class="p-5 space-y-3 flex-grow flex flex-col justify-between">
-                    <div>
-                        <span class="text-xs text-gray-400 font-bold uppercase">${p.category}</span>
-                        <h3 class="text-base font-bold text-white cursor-pointer hover:text-brandOrange transition" onclick="viewProductDetail('${p.id}')">${p.name}</h3>
-                    </div>
-                    <div class="space-y-3">
-                        <div class="flex items-baseline gap-2">
-                            <span class="text-lg font-black text-brandOrange">${finalPrice.toLocaleString('fr-FR')} FCFA</span>
-                            ${hasPromo ? `<span class="text-xs text-gray-500 line-through">${p.price.toLocaleString('fr-FR')} FCFA</span>` : ''}
-                        </div>
-                        <button onclick="viewProductDetail('${p.id}')" class="w-full bg-brandAnthracite hover:bg-brandOrange text-white font-bold py-2.5 rounded-lg text-xs uppercase tracking-wider transition">
-                            Commander / Variantes
-                        </button>
-                    </div>
-                </div>
-            </div>
-        `;
-    }).join('');
-    lucide.createIcons();
-}
-
-function filterCatalog(category) {
-    showSection('home');
-    document.querySelectorAll('.cat-btn').forEach(btn => {
-        btn.classList.remove('bg-brandOrange');
-        btn.classList.add('bg-brandAnthracite');
-    });
-    const activeBtn = document.getElementById(`btn-cat-${category}`);
-    if (activeBtn) {
-        activeBtn.classList.remove('bg-brandAnthracite');
-        activeBtn.classList.add('bg-brandOrange');
-    }
-
-    if (category === 'all') {
-        renderCatalog(products);
-    } else if (category === 'promo') {
-        renderCatalog(products.filter(p => p.promoPrice !== null));
-    } else {
-        renderCatalog(products.filter(p => p.gender === category));
-    }
-}
-
-function viewProductDetail(productId) {
-    const product = products.find(p => p.id === productId);
-    if (!product) return;
-
-    const finalPrice = product.promoPrice || product.price;
-    const container = document.getElementById('product-detail-container');
-
-    container.innerHTML = `
-        <div>
-            <img src="${product.image}" alt="${product.name}" class="w-full h-96 md:h-[450px] object-cover rounded-xl border border-brandAnthracite">
-        </div>
-        <div class="space-y-6">
-            <div>
-                <span class="text-xs font-bold text-brandOrange uppercase">${product.gender} • ${product.category}</span>
-                <h1 class="text-3xl font-black text-white mt-1">${product.name}</h1>
-                <p class="text-xs text-gray-500 mt-1">Réf: ${product.id}</p>
-            </div>
-
-            <div class="flex items-baseline gap-3">
-                <span class="text-2xl font-black text-brandOrange">${finalPrice.toLocaleString('fr-FR')} FCFA</span>
-                ${product.promoPrice ? `<span class="text-sm text-gray-500 line-through">${product.price.toLocaleString('fr-FR')} FCFA</span>` : ''}
-            </div>
-
-            <p class="text-sm text-gray-300 leading-relaxed">${product.desc}</p>
-
-            <div class="space-y-2">
-                <label class="text-xs font-bold text-gray-400 uppercase">Taille disponible :</label>
-                <div class="flex gap-2">
-                    ${product.sizes.map((s, idx) => `
-                        <button onclick="selectVariant('size', '${s}', this)" class="variant-size-btn border ${idx === 0 ? 'border-brandOrange text-brandOrange' : 'border-brandAnthracite text-white'} px-3 py-1.5 rounded text-xs font-bold">${s}</button>
-                    `).join('')}
-                </div>
-            </div>
-
-            <div class="space-y-2">
-                <label class="text-xs font-bold text-gray-400 uppercase">Couleur disponible :</label>
-                <div class="flex gap-2">
-                    ${product.colors.map((c, idx) => `
-                        <button onclick="selectVariant('color', '${c}', this)" class="variant-color-btn border ${idx === 0 ? 'border-brandOrange text-brandOrange' : 'border-brandAnthracite text-white'} px-3 py-1.5 rounded text-xs font-bold">${c}</button>
-                    `).join('')}
-                </div>
-            </div>
-
-            <div class="pt-4 space-y-3">
-                <button onclick="addToCartFromDetail('${product.id}')" class="w-full bg-brandOrange hover:bg-brandOrangeHover text-white font-extrabold py-3.5 rounded-xl uppercase text-sm tracking-wider shadow-lg transition flex items-center justify-center gap-2">
-                    <i data-lucide="shopping-bag" class="w-5 h-5"></i> Ajouter au panier
-                </button>
-            </div>
-        </div>
-    `;
-
-    selectedSize = product.sizes[0] || 'Taille Unique';
-    selectedColor = product.colors[0] || 'Couleur Unique';
-
-    showSection('product-detail');
-    lucide.createIcons();
-}
-
-function selectVariant(type, value, element) {
-    if (type === 'size') {
-        selectedSize = value;
-        document.querySelectorAll('.variant-size-btn').forEach(b => {
-            b.classList.remove('border-brandOrange', 'text-brandOrange');
-            b.classList.add('border-brandAnthracite', 'text-white');
-        });
-        element.classList.remove('border-brandAnthracite', 'text-white');
-        element.classList.add('border-brandOrange', 'text-brandOrange');
-    } else {
-        selectedColor = value;
-        document.querySelectorAll('.variant-color-btn').forEach(b => {
-            b.classList.remove('border-brandOrange', 'text-brandOrange');
-            b.classList.add('border-brandAnthracite', 'text-white');
-        });
-        element.classList.remove('border-brandAnthracite', 'text-white');
-        element.classList.add('border-brandOrange', 'text-brandOrange');
-    }
-}
-
-function addToCartFromDetail(productId) {
-    const product = products.find(p => p.id === productId);
-    if (!product) return;
-
-    const existingIndex = cart.findIndex(item => item.id === productId && item.size === selectedSize && item.color === selectedColor);
-
-    if (existingIndex > -1) {
-        cart[existingIndex].quantity += 1;
-    } else {
-        cart.push({
-            id: product.id,
-            name: product.name,
-            price: product.promoPrice || product.price,
-            size: selectedSize,
-            color: selectedColor,
-            quantity: 1,
-            image: product.image
-        });
-    }
-
-    updateCartUI();
-    toggleCartModal();
-}
-
-function updateCartQuantity(index, delta) {
-    cart[index].quantity += delta;
-    if (cart[index].quantity <= 0) {
-        cart.splice(index, 1);
-    }
-    updateCartUI();
-}
-
-function updateDeliveryFee() {
-    const select = document.getElementById('client-commune');
-    const value = select.value;
-    if (value === 'Interieur') {
-        currentDeliveryFee = 3000;
-    } else if (value === 'Abobo') {
-        currentDeliveryFee = 2000;
-    } else {
-        currentDeliveryFee = 1500;
-    }
-    updateCartUI();
-}
-
-function updateCartUI() {
-    const itemsContainer = document.getElementById('cart-items');
-    const badge = document.getElementById('cart-badge');
-    
-    const totalItemsCount = cart.reduce((sum, item) => sum + item.quantity, 0);
-    badge.innerText = totalItemsCount;
-
-    if (cart.length === 0) {
-        itemsContainer.innerHTML = `<p class="text-center text-gray-500 text-sm py-8">Votre panier est vide.</p>`;
-        document.getElementById('cart-subtotal').innerText = '0 FCFA';
-        document.getElementById('cart-total').innerText = `${currentDeliveryFee.toLocaleString('fr-FR')} FCFA`;
-        return;
-    }
-
-    itemsContainer.innerHTML = cart.map((item, idx) => `
-        <div class="flex items-center gap-3 bg-brandDark p-3 rounded-xl border border-brandAnthracite">
-            <img src="${item.image}" class="w-14 h-14 object-cover rounded-lg">
-            <div class="flex-grow">
-                <h4 class="text-xs font-bold text-white">${item.name}</h4>
-                <p class="text-[10px] text-gray-400">Taille: ${item.size} | Couleur: ${item.color}</p>
-                <p class="text-xs font-black text-brandOrange mt-1">${(item.price * item.quantity).toLocaleString('fr-FR')} FCFA</p>
-            </div>
-            <div class="flex items-center gap-2 bg-brandAnthracite rounded px-2 py-1">
-                <button onclick="updateCartQuantity(${idx}, -1)" class="text-white text-xs font-bold">-</button>
-                <span class="text-xs text-white px-1 font-bold">${item.quantity}</span>
-                <button onclick="updateCartQuantity(${idx}, 1)" class="text-white text-xs font-bold">+</button>
-            </div>
-        </div>
-    `).join('');
-
-    const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-    const total = subtotal + currentDeliveryFee;
-
-    document.getElementById('cart-subtotal').innerText = `${subtotal.toLocaleString('fr-FR')} FCFA`;
-    document.getElementById('cart-delivery').innerText = `${currentDeliveryFee.toLocaleString('fr-FR')} FCFA`;
-    document.getElementById('cart-total').innerText = `${total.toLocaleString('fr-FR')} FCFA`;
-}
-
-function sendOrderToWhatsApp() {
-    if (cart.length === 0) {
-        alert('Votre panier est vide !');
-        return;
-    }
-
-    const name = document.getElementById('client-name').value.trim();
-    const phone = document.getElementById('client-phone').value.trim();
-    const commune = document.getElementById('client-commune').value;
-    const address = document.getElementById('client-address').value.trim();
-
-    if (!name || !phone || !address) {
-        alert('Veuillez remplir tous les champs de livraison obligatoires.');
-        return;
-    }
-
-    const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-    const total = subtotal + currentDeliveryFee;
-
-    let message = `🛒 *NOUVELLE COMMANDE - VIAN’S STORE*\n`;
-    message += `------------------------------------\n`;
-    message += `👤 *Client:* ${name}\n`;
-    message += `📞 *Téléphone:* ${phone}\n`;
-    message += `📍 *Livraison:* ${commune} (${address})\n`;
-    message += `------------------------------------\n`;
-    message += `🛍️ *ARTICLES COMMANDÉS:*\n\n`;
-
-    cart.forEach((item, idx) => {
-        message += `${idx + 1}. *${item.name}*\n`;
-        message += `   • Réf: ${item.id}\n`;
-        message += `   • Taille: ${item.size} | Couleur: ${item.color}\n`;
-        message += `   • Qté: ${item.quantity} x ${item.price.toLocaleString('fr-FR')} FCFA = ${(item.price * item.quantity).toLocaleString('fr-FR')} FCFA\n\n`;
-    });
-
-    message += `------------------------------------\n`;
-    message += `💵 *Sous-total:* ${subtotal.toLocaleString('fr-FR')} FCFA\n`;
-    message += `🚚 *Frais Livraison:* ${currentDeliveryFee.toLocaleString('fr-FR')} FCFA\n`;
-    message += `🔥 *TOTAL À PAYER:* ${total.toLocaleString('fr-FR')} FCFA\n`;
-    message += `------------------------------------\n`;
-    message += `*« VIVRE, C'EST ÊTRE FRAIS ! »*`;
-
-    const encodedMessage = encodeURIComponent(message);
-    const whatsappUrl = `https://wa.me/${storeConfig.whatsappNumber}?text=${encodedMessage}`;
-
-    window.open(whatsappUrl, '_blank');
-}
-
-function handleSearch() {
-    const query = document.getElementById('search-input').value.toLowerCase().trim();
-    const resultsContainer = document.getElementById('search-results');
-
-    if (query === '') {
-        resultsContainer.innerHTML = '';
-        return;
-    }
-
-    const filtered = products.filter(p => p.name.toLowerCase().includes(query) || p.category.toLowerCase().includes(query));
-
-    if (filtered.length === 0) {
-        resultsContainer.innerHTML = `<p class="text-xs text-gray-500 py-2">Aucun produit trouvé.</p>`;
-        return;
-    }
-
-    resultsContainer.innerHTML = filtered.map(p => `
-        <div onclick="viewProductDetail('${p.id}'); toggleSearchModal();" class="flex items-center gap-3 p-2 bg-brandDark rounded-lg cursor-pointer hover:bg-brandAnthracite">
-            <img src="${p.image}" class="w-10 h-10 object-cover rounded">
-            <div>
-                <h4 class="text-xs font-bold text-white">${p.name}</h4>
-                <p class="text-[10px] text-brandOrange font-bold">${(p.promoPrice || p.price).toLocaleString('fr-FR')} FCFA</p>
-            </div>
-        </div>
-    `).join('');
-}
-
-function renderVideos() {
-    const grid = document.getElementById('videos-grid');
-    grid.innerHTML = videos.map(v => {
-        const product = products.find(p => p.id === v.productId);
-        return `
-            <div class="bg-brandGray rounded-2xl overflow-hidden border border-brandAnthracite flex flex-col items-center p-4">
-                <div class="relative w-full aspect-ratio-9-16 bg-black rounded-xl overflow-hidden border border-brandAnthracite flex items-center justify-center">
-                    <img src="${v.videoUrl}" class="w-full h-full object-cover">
-                    <div class="absolute inset-0 bg-black/30 flex items-center justify-center">
-                        <div class="bg-brandOrange text-white p-4 rounded-full shadow-lg cursor-pointer">
-                            <i data-lucide="play" class="w-8 h-8 fill-current"></i>
-                        </div>
-                    </div>
-                </div>
-                <h3 class="text-sm font-bold text-white mt-4 text-center">${v.title}</h3>
-                ${product ? `
-                    <button onclick="viewProductDetail('${product.id}')" class="mt-3 w-full bg-brandOrange hover:bg-brandOrangeHover text-white py-2 rounded-lg text-xs font-black uppercase tracking-wider flex items-center justify-center gap-2">
-                        <i data-lucide="eye" class="w-4 h-4"></i> Voir le Produit
-                    </button>
-                ` : ''}
-            </div>
-        `;
-    }).join('');
-    lucide.createIcons();
-}
-
-function updateNavWhatsApp() {
-    document.getElementById('nav-whatsapp-link').href = `https://wa.me/${storeConfig.whatsappNumber}`;
-}
-
-function saveAdminSettings() {
-    const newNum = document.getElementById('admin-wa-num').value.trim();
-    if (newNum) {
-        storeConfig.whatsappNumber = newNum;
-        updateNavWhatsApp();
-        alert('Numéro WhatsApp mis à jour avec succès !');
-    }
-}
-
-function handleAddProduct(e) {
-    e.preventDefault();
-    const newProd = {
-        id: document.getElementById('p-ref').value.trim(),
-        name: document.getElementById('p-name').value.trim(),
-        gender: document.getElementById('p-gender').value,
-        category: document.getElementById('p-category').value,
-        price: parseFloat(document.getElementById('p-price').value),
-        promoPrice: document.getElementById('p-promo').value ? parseFloat(document.getElementById('p-promo').value) : null,
-        image: document.getElementById('p-image').value.trim() || 'https://images.unsplash.com/photo-1523381210434-271e8be1f52b?auto=format&fit=crop&w=600&q=80',
-        sizes: document.getElementById('p-sizes').value.split(',').map(s => s.trim()),
-        colors: document.getElementById('p-colors').value.split(',').map(c => c.trim()),
-        stock: 10,
-        desc: document.getElementById('p-desc').value.trim() || 'Produit exclusif VIAN’S STORE.'
-    };
-
-    products.unshift(newProd);
-    renderCatalog(products);
-    renderAdminProducts();
-    document.getElementById('add-product-form').reset();
-    alert('Produit ajouté au catalogue !');
-}
-
-function deleteProduct(id) {
-    if (confirm('Voulez-vous vraiment supprimer ce produit ?')) {
-        products = products.filter(p => p.id !== id);
-        renderCatalog(products);
-        renderAdminProducts();
-    }
-}
-
-function renderAdminProducts() {
-    const list = document.getElementById('admin-products-list');
-    list.innerHTML = products.map(p => `
-        <div class="flex items-center justify-between bg-brandDark p-3 rounded-lg border border-brandAnthracite text-xs">
-            <div class="flex items-center gap-3">
-                <img src="${p.image}" class="w-10 h-10 object-cover rounded">
-                <div>
-                    <span class="font-bold text-white">${p.name}</span>
-                    <span class="text-gray-500"> (${p.id})</span>
-                    <p class="text-brandOrange font-black">${(p.promoPrice || p.price).toLocaleString('fr-FR')} FCFA</p>
-                </div>
-            </div>
-            <button onclick="deleteProduct('${p.id}')" class="bg-red-600 hover:bg-red-700 text-white px-3 py-1.5 rounded font-bold">Supprimer</button>
-        </div>
-    `).join('');
-}
+const TPL='',D=window.DATA,$=s=>document.querySelector(s),
+E=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])),
+F=n=>new Intl.NumberFormat('fr-FR').format(n)+' FCFA',
+byId=i=>D.p.find(p=>p.id==i),pr=p=>+p.pr2||+p.pr,
+PGS={apropos:'À propos de VIAN’S STORE',contact:'Contact',faq:'Questions fréquentes',tailles:'Guide des tailles',cgv:'Conditions générales de vente',conf:'Politique de confidentialité',livraison:'Politique de livraison',retour:'Politique de retour et d’échange'},
+ST=['Nouvelle commande','En attente de confirmation','Confirmée','En préparation','Expédiée','Livrée','Annulée'],
+CATS={H:['T-shirts','Polos','Chemises','Jeans','Pantalons','Shorts','Ensembles','Sweats et hoodies','Vestes','Chaussures','Accessoires'],F:['Tops et crop tops','Robes','Ensembles','Jeans','Pantalons','Jupes','Chemises','Sweats','Vestes','Chaussures','Sacs et accessoires']};
+let cart=[],q='',cat='',isO=false,tab='p',X={},FM={};
+try{cart=JSON.parse(localStorage.getItem('c')||'[]')}catch(e){}
+const sv=()=>{try{localStorage.setItem('c',JSON.stringify(cart))}catch(e){}},
+waN=()=>(D.s.wa||'').replace(/\D/g,''),
+ok=u=>/^https?:\/\//.test(u||'')?u:'#',
+T=m=>{const t=$('#t');t.textContent=m;t.className='on';setTimeout(()=>t.className='',4000)},
+M=h=>{const m=$('#M');m.innerHTML='<div class="mb"><button class="x" data-a="x" aria-label="Fermer">✕</button>'+h+'</div>';m.className='m on'},
+Z=()=>{$('#M').className='m'},
+vOf=p=>(p.v||[]).find(v=>v.s==X.s&&v.c==X.c),
+card=p=>`<a class="c" href="#p-${p.id}"><div class="im">${p.im&&p.im[0]?`<img src="${E(p.im[0])}" alt="${E(p.n)}" loading="lazy">`:'<span class="b">VIAN’S</span>'}${+p.pr2?'<i class="tg">PROMO</i>':''}</div><b class="n">${E(p.n)}</b>${+p.pr2?`<s>${F(p.pr)}</s> `:''}<strong>${F(pr(p))}</strong></a>`;
+function shell(){$('#app').innerHTML=`<header><a href="#accueil" class="lg b">VIAN’S STORE</a><input id="q" data-f="q" type="search" placeholder="Rechercher un vêtement" aria-label="Rechercher"><a href="#panier" class="ic" aria-label="Panier">🛒<sup id="cn"></sup></a>${isO?'<a href="#admin" class="ic" aria-label="Administration">⚙️</a>':''}</header>
+<section class="hero"><h1>Vivre, c’est être frais !</h1><p>Streetwear homme et femme. Commande en quelques clics, confirmation sur WhatsApp.</p><a class="btn" href="#tendances">DÉCOUVRIR LES TENDANCES</a></section><main id="mm"></main><footer id="ft"></footer><a id="wa" class="wa" target="_blank" rel="noopener">WhatsApp</a>`}
+function fill(){const P=D.p,s=D.s,w=waN();
+$('#cn').textContent=cart.length?cart.reduce((a,l)=>a+l.q,0):'';
+$('#wa').style.display=w?'':'none';if(w)$('#wa').href='https://wa.me/'+w;
+const grid=l=>l.length?`<div class="g">${l.map(card).join('')}</div>`:'<p class="mu">Rien à afficher pour le moment.</p>',
+sec=(id,t,l)=>`<section id="${id}"><h2>${t}</h2>${grid(l)}</section>`,
+chips=`<div class="ch">${[['','Tout'],['H','Homme'],['F','Femme']].map(([k,l])=>`<button class="o${cat==k?' on':''}" data-a="ct" data-v="${k}">${l}</button>`).join('')}</div>`;
+let h;
+if(q||cat)h=`<section>${chips}</section>`+sec('res','Résultats',P.filter(p=>(!q||(p.n+' '+p.rf+' '+p.sc).toLowerCase().includes(q.toLowerCase()))&&(!cat||p.c==cat)));
+else h=`<section>${chips}</section>`+sec('tendances','Nouveautés',P.filter(p=>p.nw))+sec('best','Meilleures ventes',P.filter(p=>p.bs))+sec('homme','Collection Homme',P.filter(p=>p.c=='H'))+sec('femme','Collection Femme',P.filter(p=>p.c=='F'))+sec('promos','Promotions',P.filter(p=>+p.pr2))
++`<section id="videos"><h2>Vidéos &amp; Tendances</h2>${D.v.length?`<div class="vs">${D.v.map(v=>`<div><a class="vp" href="${E(ok(v.u))}" target="_blank" rel="noopener"><span>▶</span><b>${E(v.t)}</b></a>${byId(v.p)?`<a class="btn" href="#p-${v.p}">VOIR LE PRODUIT</a>`:''}</div>`).join('')}</div>`:'<p class="mu">Les vidéos arrivent bientôt.</p>'}</section>`
++`<section><h2>Pourquoi VIAN’S STORE</h2><div class="av"><div><b>Commande sur WhatsApp</b>Tu envoies ton panier, on confirme avec toi.</div><div><b>Livraison</b>Le tarif est confirmé selon ta zone.</div><div><b>Homme et femme</b>Des nouveautés streetwear à suivre.</div></div></section>`;
+$('#mm').innerHTML=h;
+const L=(u,t)=>u?`<a href="${E(ok(u))}" target="_blank" rel="noopener">${t}</a>`:'';
+$('#ft').innerHTML=`<p class="b">VIAN’S STORE</p><p class="mu">Vivre, c’est être frais ! Abidjan, Côte d’Ivoire.</p><p>${Object.keys(PGS).map(k=>`<a href="#page-${k}">${PGS[k]}</a>`).join('')}</p><p>${w?`<a href="https://wa.me/${w}" target="_blank" rel="noopener">WhatsApp</a>`:''}${L(s.tt,'TikTok')}${L(s.fb,'Facebook')}${L(s.ig,'Instagram')}</p>`}
+function PM(p){if(X.id!=p.id)X={id:p.id,s:'',c:'',n:1};const vs=p.v||[],sz=[...new Set(vs.map(v=>v.s))],co=[...new Set(vs.map(v=>v.c))];
+if(sz.length==1&&!X.s)X.s=sz[0];if(co.length==1&&!X.c)X.c=co[0];const v=vOf(p),av=(s,c)=>vs.some(v=>(!s||v.s==s)&&(!c||v.c==c)&&v.k>0);
+const grp=(a,k,cur,f)=>a.map(z=>`<button class="o${z==cur?' on':''}" data-a="${k}" data-v="${E(z)}"${f(z)?'':' disabled'}>${E(z)}</button>`).join('');
+M(`<div class="pg">${(p.im&&p.im.length?p.im:['']).map(u=>`<div class="im">${u?`<img src="${E(u)}" alt="${E(p.n)}">`:'<span class="b">VIAN’S</span>'}</div>`).join('')}</div><h2>${E(p.n)}</h2><p class="mu">Réf. ${E(p.rf||p.id)} · ${E(p.sc)} · ${p.c=='H'?'Homme':'Femme'}</p><p>${+p.pr2?`<s>${F(p.pr)}</s> `:''}<strong>${F(pr(p))}</strong></p><p>${E(p.d)}</p>
+<b>Taille</b><div class="ch">${grp(sz,'ps',X.s,z=>av(z,X.c))}</div><b>Couleur</b><div class="ch">${grp(co,'pc',X.c,z=>av(X.s,z))}</div>
+<b>Quantité</b><div class="ch"><button class="o" data-a="qn" data-v="-1">−</button><span class="o" style="border:0">${X.n}</span><button class="o" data-a="qn" data-v="1">+</button></div>
+<p class="mu">${v?(v.k>0?'Disponible ('+v.k+' en stock)':'Indisponible'):'Choisis une taille et une couleur.'}</p>
+<button class="btn" data-a="ad">Ajouter au panier</button> <button class="btn k" data-a="w1">Commander sur WhatsApp</button> <button class="o" data-a="sh">Partager</button>`)}
+function lines(){return cart.filter(l=>byId(l.id))}
+function sub(){return lines().reduce((a,l)=>a+pr(byId(l.id))*l.q,0)}
+function fee(){const z=(D.s.zones||[]).find(z=>z.n==FM.cm);return z&&z.f!==''&&!isNaN(z.f)?+z.f:null}
+function ML(it){return it.map(l=>{const p=byId(l.id);return`• ${p.n} | réf. ${p.rf||p.id} | taille ${l.s} | couleur ${l.c} | ${l.q} × ${F(pr(p))}`}).join('\n')}
+function go(t){const w=waN();if(!w)return T('Le numéro WhatsApp de la boutique n’est pas encore configuré.');const a=document.createElement('a');a.href='https://wa.me/'+w+'?text='+encodeURIComponent(t);a.target='_blank';a.rel='noopener';document.body.appendChild(a);a.click();a.remove();T('Message prêt dans WhatsApp. La commande n’est prise en compte qu’une fois ton message envoyé.')}
+function CM(){const ls=lines(),zs=D.s.zones||[],f=fee(),st=sub();
+if(!ls.length)return M('<h2>Panier</h2><p>Ton panier est vide.</p><a class="btn" href="#accueil">Continuer mes achats</a>');
+const fi=(k,l,t='text')=>`<label>${l}<input data-f="${k}" type="${t}" value="${E(FM[k])}"></label>`;
+M(`<h2>Panier</h2>${ls.map((l,i)=>{const p=byId(l.id);return`<div class="ln"><span><b class="n">${E(p.n)}</b>${E(l.s)} · ${E(l.c)} · ${F(pr(p))}</span><span><button class="o" data-a="cq" data-i="${i}" data-v="-1">−</button> ${l.q} <button class="o" data-a="cq" data-i="${i}" data-v="1">+</button> <button class="o" data-a="cr" data-i="${i}" aria-label="Supprimer">🗑</button></span></div>`}).join('')}
+<p>Sous-total : <strong>${F(st)}</strong></p><p>Livraison : ${f!==null?F(f):'à confirmer sur WhatsApp'}</p><p>Total : <strong>${F(st+(f||0))}</strong>${f===null?' (hors livraison)':''}</p>
+<h3>Livraison</h3>${fi('nm','Nom et prénom')}${fi('tl','Téléphone','tel')}${zs.length?`<label>Commune ou zone<select data-f="cm" data-r="1"><option value="">Choisir</option>${zs.map(z=>`<option${FM.cm==z.n?' selected':''}>${E(z.n)}</option>`).join('')}</select></label>`:fi('cm','Commune ou ville')}${fi('qt','Quartier')}${fi('ad','Adresse ou point de livraison')}${fi('nt','Instructions (facultatif)')}
+<button class="btn" data-a="co">FINALISER MA COMMANDE SUR WHATSAPP</button><p><a href="#accueil">Continuer mes achats</a></p>`)}
+function PG(k){if(!PGS[k])return Z();const t=D.pg[k];M(`<h2>${PGS[k]}</h2><p>${t?E(t).replace(/\n/g,'<br>'):'Contenu à compléter par VIAN’S STORE.'}</p>`)}
+const I=(id,l,v,t='text')=>`<label>${l}<input id="${id}" type="${t}" value="${E(v)}"></label>`,TA=(id,l,v)=>`<label>${l}<textarea id="${id}">${E(v)}</textarea></label>`,V=id=>$('#'+id).value.trim();
+function PF(p={}){return`<div class="fm"><h3>${p.id?'Modifier':'Ajouter'} un produit</h3>${I('f_n','Nom',p.n)}${I('f_rf','Référence',p.rf)}<label>Catégorie<select id="f_c"><option value="H"${p.c=='H'?' selected':''}>Homme</option><option value="F"${p.c=='F'?' selected':''}>Femme</option></select></label>${I('f_sc','Sous-catégorie (ex : '+CATS.H[0]+')',p.sc)}${I('f_pr','Prix (FCFA)',p.pr,'number')}${I('f_p2','Prix promo (facultatif)',+p.pr2||'','number')}${TA('f_d','Description',p.d)}${TA('f_v','Variantes : Taille | Couleur | Stock (une par ligne)',(p.v||[]).map(v=>[v.s,v.c,v.k].join(' | ')).join('\n'))}<label>Photos<input type="file" accept="image/*" multiple data-up="f_im"></label>${TA('f_im','URLs des photos (une par ligne)',(p.im||[]).join('\n'))}<label><input type="checkbox" id="f_nw"${p.nw?' checked':''}> Nouveauté</label><label><input type="checkbox" id="f_bs"${p.bs?' checked':''}> Meilleure vente</label><button class="btn" data-a="sp" data-v="${p.id||''}">Enregistrer le produit</button></div>`}
+const AT={
+p:()=>`<button class="btn" data-a="np">Ajouter un produit</button>${D.p.map(p=>`<div class="ln"><span>${E(p.n)}<br><small class="mu">${F(pr(p))} · stock ${(p.v||[]).reduce((a,v)=>a+(+v.k||0),0)}</small></span><span><button class="o" data-a="ep" data-v="${p.id}">Modifier</button> <button class="o" data-a="dp" data-v="${p.id}">Supprimer</button></span></div>`).join('')}<div id="pf"></div>`,
+v:()=>`${D.v.map((v,i)=>`<div class="ln"><span>${E(v.t)}</span><button class="o" data-a="dv" data-v="${i}">Supprimer</button></div>`).join('')}<div class="fm"><h3>Ajouter une vidéo</h3>${I('v_t','Titre')}${I('v_u','Lien de la vidéo (YouTube, TikTok…)')}<label>Produit associé<select id="v_p"><option value="">Aucun</option>${D.p.map(p=>`<option value="${p.id}">${E(p.n)}</option>`).join('')}</select></label><button class="btn" data-a="sv">Ajouter</button></div>`,
+o:()=>`<p class="mu">Les commandes arrivent par WhatsApp : note-les ici pour suivre leur statut.</p>${D.o.map((o,i)=>`<div class="ln"><span>${E(o.n)} · ${E(o.t)}<br><small class="mu">${E(o.d)} · ${F(o.m||0)}</small></span><span><select data-os="${i}">${ST.map(s=>`<option${o.st==s?' selected':''}>${s}</option>`).join('')}</select> <button class="o" data-a="do" data-v="${i}">🗑</button></span></div>`).join('')}<div class="fm"><h3>Nouvelle commande</h3>${I('o_n','Client')}${I('o_t','Téléphone')}${TA('o_d','Articles et livraison','')}${I('o_m','Total (FCFA)','','number')}<button class="btn" data-a="so">Ajouter</button></div>`,
+s:()=>`<div class="fm"><h3>Boutique</h3>${I('s_wa','Numéro WhatsApp avec indicatif (ex : 225XXXXXXXXXX)',D.s.wa)}${I('s_tt','Lien TikTok',D.s.tt)}${I('s_fb','Lien Facebook',D.s.fb)}${I('s_ig','Lien Instagram',D.s.ig)}${TA('s_z','Zones de livraison : Commune | frais en FCFA (laisse vide si à confirmer)',(D.s.zones||[]).map(z=>z.n+' | '+z.f).join('\n'))}${Object.keys(PGS).map(k=>TA('g_'+k,PGS[k],D.pg[k])).join('')}<button class="btn" data-a="ss">Enregistrer</button></div>`};
+function AD(){M(`<h2>Administration</h2><p class="mu">Modifie, puis clique sur « Publier les changements » : c’est ce qui met la boutique à jour pour tes clients.</p><div class="tb">${[['p','Produits'],['v','Vidéos'],['o','Commandes'],['s','Boutique']].map(([k,l])=>`<button class="o${k==tab?' on':''}" data-a="tb" data-v="${k}">${l}</button>`).join('')}<button class="btn" data-a="pub">Publier les changements</button></div>${AT[tab]()}`)}
+async function pub(){try{const a=window.claude&&await claude.use('artifact');if(!a)return T('Publication indisponible ici.');const j=JSON.stringify(D).replace(/</g,'\\u003c');await a.publish('<!doctype html>'+TPL.replace(/(<script id="d" type="application\/json">)[\s\S]*?(<\/script>)/,(m,x,y)=>x+j+y))}catch(e){T('Échec de la publication : '+(e.code||e.message))}}
+const A={x(){location.hash='accueil'},ct(d){cat=d.v;fill()},tb(d){tab=d.v;AD()},
+ps(d){X.s=X.s==d.v?'':d.v;PM(byId(X.id))},pc(d){X.c=X.c==d.v?'':d.v;PM(byId(X.id))},qn(d){X.n=Math.max(1,X.n+ +d.v);PM(byId(X.id))},
+ad(){const p=byId(X.id),v=vOf(p);if(!v||v.k<1)return T('Choisis une taille et une couleur disponibles.');const l=cart.find(l=>l.id==p.id&&l.s==X.s&&l.c==X.c),n=(l?l.q:0)+X.n;if(n>v.k)return T('Stock insuffisant : '+v.k+' disponible(s).');l?l.q=n:cart.push({id:p.id,s:X.s,c:X.c,q:X.n});sv();fill();T('Article ajouté au panier.')},
+w1(){const p=byId(X.id);if(!vOf(p))return T('Choisis une taille et une couleur.');go(`Bonjour VIAN’S STORE, je souhaite commander :\n${ML([{id:p.id,s:X.s,c:X.c,q:X.n}])}\nTotal articles : ${F(pr(p)*X.n)}\nPeux-tu me confirmer la disponibilité et la livraison ?`)},
+sh(){const u=location.href;navigator.share?navigator.share({title:byId(X.id).n,url:u}).catch(()=>{}):navigator.clipboard.writeText(u).then(()=>T('Lien copié.'))},
+cq(d){const l=lines()[+d.i];l.q=Math.max(1,l.q+ +d.v);sv();CM();fill()},cr(d){const l=lines()[+d.i];cart.splice(cart.indexOf(l),1);sv();CM();fill()},
+co(){if(!FM.nm||!FM.tl||!FM.cm)return T('Renseigne ton nom, ton téléphone et ta commune.');const f=fee(),st=sub();go(`Bonjour VIAN’S STORE, je souhaite commander :\n${ML(lines())}\nSous-total : ${F(st)}\nLivraison : ${f!==null?F(f):'à confirmer'}\nTotal : ${F(st+(f||0))}${f===null?' (hors livraison)':''}\n\nNom : ${FM.nm}\nTéléphone : ${FM.tl}\nCommune : ${FM.cm}\nQuartier : ${FM.qt||''}\nAdresse : ${FM.ad||''}\nInstructions : ${FM.nt||''}`)},
+np(){$('#pf').innerHTML=PF()},ep(d){$('#pf').innerHTML=PF(byId(d.v));$('#pf').scrollIntoView()},
+dp(d){if(confirm('Supprimer ce produit ?')){D.p=D.p.filter(p=>p.id!=d.v);AD()}},
+sp(d){const n=V('f_n'),pri=+V('f_pr');if(!n||!pri)return T('Le nom et le prix sont obligatoires.');
+const v=V('f_v').split('\n').map(l=>l.split('|').map(x=>x.trim())).filter(a=>a[0]).map(a=>({s:a[0],c:a[1]||'Unique',k:+a[2]||0})),
+o={id:d.v||'p'+Date.now().toString(36),n,rf:V('f_rf'),c:V('f_c'),sc:V('f_sc'),pr:pri,pr2:+V('f_p2')||0,d:V('f_d'),v:v.length?v:[{s:'Unique',c:'Unique',k:0}],im:V('f_im').split('\n').map(x=>x.trim()).filter(Boolean),nw:$('#f_nw').checked?1:0,bs:$('#f_bs').checked?1:0},i=D.p.findIndex(p=>p.id==o.id);i<0?D.p.push(o):D.p[i]=o;AD();T('Produit enregistré. Pense à publier.')},
+sv(){const t=V('v_t'),u=V('v_u');if(!t||!ok(u)||ok(u)=='#')return T('Titre et lien (https://…) obligatoires.');D.v.push({t,u,p:V('v_p')});AD()},dv(d){D.v.splice(+d.v,1);AD()},
+so(){if(!V('o_n'))return T('Indique le client.');D.o.unshift({n:V('o_n'),t:V('o_t'),d:V('o_d'),m:+V('o_m')||0,st:ST[0]});AD()},do(d){D.o.splice(+d.v,1);AD()},
+ss(){const s=D.s;s.wa=V('s_wa');s.tt=V('s_tt');s.fb=V('s_fb');s.ig=V('s_ig');s.zones=V('s_z').split('\n').map(l=>l.split('|').map(x=>x.trim())).filter(a=>a[0]).map(a=>({n:a[0],f:a[1]||''}));Object.keys(PGS).forEach(k=>D.pg[k]=V('g_'+k));fill();T('Réglages enregistrés. Pense à publier.')},
+pub};
+document.addEventListener('click',e=>{const t=e.target.closest('[data-a]');if(t&&A[t.dataset.a])A[t.dataset.a](t.dataset)});
+document.addEventListener('input',e=>{const k=e.target.dataset.f;if(!k)return;if(k=='q'){q=e.target.value;fill()}else FM[k]=e.target.value});
+document.addEventListener('change',async e=>{const t=e.target;if(t.dataset.f=='cm'){FM.cm=t.value;CM()}if(t.dataset.os)D.o[+t.dataset.os].st=t.value;
+if(t.dataset.up){const a=window.claude&&await claude.use('assets');if(!a)return T('Import indisponible : colle des URLs d’images.');for(const f of t.files){try{const r=await a.upload(f),b=$('#'+t.dataset.up);b.value+=(b.value?'\n':'')+r.url}catch(x){T('Échec de l’import de '+f.name)}}}});
+function route(){const h=location.hash.slice(1);if(h.startsWith('p-')){const p=byId(h.slice(2));return p?PM(p):Z()}if(h=='panier')return CM();if(h=='admin')return isO?AD():(Z(),T('Espace réservé au propriétaire.'));if(h.startsWith('page-'))return PG(h.slice(5));Z()}
+addEventListener('hashchange',route);
+shell();fill();route();
+if(window.claude)claude.use('user').then(u=>{if(u&&u.isOwner()){isO=true;shell();fill();route()}}).catch(()=>{});
